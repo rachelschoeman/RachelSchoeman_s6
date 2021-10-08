@@ -46,14 +46,22 @@ function loadData() {
 
 
 function createVis() {
-
+    areachart = new StackedAreaChart("stacked-area-chart", allData.layers);
 	// TO-DO: Instantiate visualization objects here
 	// areachart = new ...
-
+    timeline= new Timeline ("timeline", allData.years);
+  
 }
 
 
-function brushed() {
+function brushed({selection}) {
 
-	// TO-DO: React to 'brushed' event
+	// Set new domain if brush (user selection) is not empty
+    areachart.x.domain(
+        !selection ? timeline.xContext.domain() : selection.map(timeline.x.invert)
+
+    );
+
+    areachart.wrangleData();
+    
 }

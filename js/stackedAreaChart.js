@@ -62,8 +62,17 @@ StackedAreaChart.prototype.initVis = function(){
         .attr("class", "y-axis axis");
 
 
-	// TO-DO: Initialize stack layout
-	
+    // TO-DO: Initialize stack layout
+    var dataCategories = colorScale.domain();
+    var stack = d3.stack().keys(dataCategories);
+
+    vis.stackedData = stack(this.data);
+    
+    vis.area = d3.area()
+    .x(function(d) { return vis.x(d.data.Year); })
+    .y0(function(d) { return vis.y(d[0]); })
+    .y1(function(d) { return vis.y(d[1]); });
+  ;
     // TO-DO: Rearrange data
 
     // TO-DO: Stacked area layout
@@ -72,10 +81,10 @@ StackedAreaChart.prototype.initVis = function(){
 
 
 	// TO-DO: Tooltip placeholder
-
+    tooltip= vis.svg.append("text").text("").attr("x", 30).attr("y", 20);
 
 	// TO-DO: (Filter, aggregate, modify data)
-    // vis.wrangleData();
+    vis.wrangleData();
 }
 
 
@@ -122,14 +131,27 @@ StackedAreaChart.prototype.updateVis = function(){
     categories.enter().append("path")
         .attr("class", "area")
         .merge(categories)
+        .on("mouseover", function(d,i){
+            tooltip.text(i.key);
+        })
+        .on("mouseout", function(d){
+            tooltip.text("");
+        })
         .style("fill", function(d,i) {
             return colorScale(dataCategories[i]);
         })
         .attr("d", function(d) {
             return vis.area(d);
         })
+    
 
-
+        vis.svg.append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", vis.width)
+        .attr("height", vis.height);
+        
+     
     // TO-DO: Update tooltip text
 
 	categories.exit().remove();
