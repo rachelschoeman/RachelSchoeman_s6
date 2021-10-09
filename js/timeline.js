@@ -65,8 +65,10 @@ Timeline.prototype.initVis = function(){
 
   var brush = d3.brushX()
     .extent([[0, 0], [vis.width, vis.height]])
-    .on("brush", brushed);
+    .on("brush", brushed)
+    .on("brush end", brushed);
 
+    
 
 
   // TO-DO: Append brush component here

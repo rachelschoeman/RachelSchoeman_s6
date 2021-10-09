@@ -56,7 +56,7 @@ function createVis() {
 
 function brushed({selection}) {
 
-	// Set new domain if brush (user selection) is not empty
+
     areachart.x.domain(
         !selection ? timeline.xContext.domain() : selection.map(timeline.x.invert)
 
